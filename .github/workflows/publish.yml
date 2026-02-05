@@ -36,3 +36,7 @@ jobs:
       - name: Publish @agent-memory/cli
         working-directory: packages/cli
         run: npm publish --access public --provenance
+
+      - name: Publish @agent-memory/mcp
+        working-directory: packages/mcp
+        run: npm publish --access public --provenance

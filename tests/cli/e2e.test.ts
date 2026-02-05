@@ -35,7 +35,7 @@ describe('CLI E2E', () => {
 
   it('should show version', () => {
     const output = execFileSync('node', [CLI, '--version'], { env, encoding: 'utf-8' }).trim();
-    expect(output).toBe('0.1.1');
+    expect(output).toBe('0.1.2');
   });
 
   it('should add, get, update, and delete a memory', () => {

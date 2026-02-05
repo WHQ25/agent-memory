@@ -2,12 +2,15 @@
 
 ## Project Overview
 
-**agent-memory** — Long-term, cross-project memory system for AI agents. Monorepo with two npm packages:
+**agent-memory** — Long-term, cross-project memory system for AI agents. Monorepo with three npm packages:
 
 - `@agent-memory/core` — Interfaces, SQLite source, hybrid search (FTS + vector + RRF), embedding, config
 - `@agent-memory/cli` — CLI tool (`agmem`) with JSON/human/TOON output formats
+- `@agent-memory/mcp` — MCP server (`agmem-mcp`) for AI agents without bash access
 
 ## Quick Reference
+
+**Package manager**: bun (not npm/yarn/pnpm). Always use `bun` for install, run, and dependency management.
 
 ```bash
 bun install          # Install all dependencies
@@ -32,6 +35,12 @@ packages/cli/src/
 ├── cli/commands/                # One file per command (add, get, search, list, etc.)
 ├── cli/middleware.ts            # resolveSource(), closeSource(), readStdin()
 └── format/                      # JSON, human-readable, TOON formatters
+
+packages/mcp/src/
+├── index.ts              # Entry point (#!/usr/bin/env node, stdio transport)
+├── server.ts             # createServer(): McpServer factory + tool registration
+├── source.ts             # resolveSource/closeSource singleton
+└── tools/                # One file per tool group (memory, search, source, config)
 ```
 
 ### Key Design Patterns
@@ -74,4 +83,4 @@ packages/cli/src/
 
 ## Version Bumping
 
-When releasing: update version in both `packages/core/package.json`, `packages/cli/package.json`, and the CLI's `program.version()` in `packages/cli/src/index.ts`. The e2e test checks `--version` output.
+When releasing: update version in all three `packages/core/package.json`, `packages/cli/package.json`, `packages/mcp/package.json`, the CLI's `program.version()` in `packages/cli/src/index.ts`, and the MCP server version in `packages/mcp/src/server.ts`. The e2e test checks `--version` output.

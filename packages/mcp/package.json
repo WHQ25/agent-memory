@@ -1,0 +1,31 @@
+{
+  "name": "@agent-memory/mcp",
+  "version": "0.1.2",
+  "description": "MCP server for agent-memory: long-term, cross-project memory system for AI agents",
+  "type": "module",
+  "bin": {
+    "agmem-mcp": "./dist/index.js"
+  },
+  "files": ["dist", "README.md"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WHQ25/agent-memory",
+    "directory": "packages/mcp"
+  },
+  "dependencies": {
+    "@agent-memory/core": "^0.1.0",
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^3.24.0"
+  }
+}
