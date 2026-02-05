@@ -18,6 +18,11 @@
     "node": ">=22"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WHQ25/agent-memory",
+    "directory": "packages/cli"
+  },
   "dependencies": {
     "@agent-memory/core": "^0.1.0",
     "commander": "^13.1.0",
