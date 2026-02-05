@@ -25,7 +25,8 @@ export function registerMemoryCommands(program: Command): void {
       const tags = opts.tags ? opts.tags.split(',').map(t => t.trim()) : undefined;
       const metadata = injectMetadata(globalOpts.source ?? 'local');
       const memory = await source.add({ content, digest: opts.digest, tags, metadata });
-      output(memory, format);
+      const { content: _, ...summary } = memory;
+      output(summary, format);
     });
 
   program
@@ -70,7 +71,8 @@ export function registerMemoryCommands(program: Command): void {
       const tags = opts.tags ? opts.tags.split(',').map(t => t.trim()) : undefined;
       const metadata = injectMetadata(globalOpts.source ?? 'local');
       const memory = await source.update(id, { content, digest: opts.digest, tags, metadata });
-      output(memory, format);
+      const { content: _, ...summary } = memory;
+      output(summary, format);
     });
 
   program

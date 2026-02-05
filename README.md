@@ -11,10 +11,10 @@ But agents forget everything else. The workaround you discovered last month, the
 ## Quick Start
 
 ```bash
-# Install
-bun install && bun run build
+# Install globally
+npm install -g @agent-memory/cli
 
-# Initialize (downloads local embedding model)
+# Initialize (downloads local embedding model, ~65MB)
 agmem run init
 
 # Store a memory
