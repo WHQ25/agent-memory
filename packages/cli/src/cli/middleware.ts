@@ -1,6 +1,4 @@
-import { SqliteSource } from '../source/sqlite/index.js';
-import { getDbPath } from '../config/paths.js';
-import { getSourceMetadata } from '../config/config.js';
+import { SqliteSource, getDbPath, getSourceMetadata } from '@agent-memory/core';
 
 let source: SqliteSource | null = null;
 

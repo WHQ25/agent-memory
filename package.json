@@ -1,30 +1,11 @@
 {
-  "name": "agmem",
-  "version": "0.1.0",
-  "description": "Long-term, cross-project memory system for AI agents",
-  "type": "module",
-  "bin": {
-    "agmem": "./dist/cli/index.js"
-  },
+  "private": true,
+  "workspaces": ["packages/*"],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsc -b",
+    "dev": "tsc -b --watch",
     "test": "bunx vitest run",
     "test:watch": "bunx vitest"
-  },
-  "keywords": ["ai", "agent", "memory", "cli"],
-  "license": "MIT",
-  "engines": {
-    "node": ">=22"
-  },
-  "dependencies": {
-    "commander": "^13.1.0",
-    "better-sqlite3": "^11.8.1",
-    "sqlite-vec": "^0.1.7-alpha.2",
-    "@huggingface/transformers": "^3.4.1",
-    "@toon-format/toon": "^2.1.0",
-    "env-paths": "^3.0.0",
-    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",

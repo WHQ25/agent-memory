@@ -1,0 +1,33 @@
+{
+  "name": "@agent-memory/core",
+  "version": "0.1.0",
+  "description": "Core library for agent-memory: interfaces, sources, search, and embedding",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "sqlite-vec": "^0.1.7-alpha.2",
+    "@huggingface/transformers": "^3.4.1",
+    "env-paths": "^3.0.0",
+    "uuid": "^11.1.0"
+  }
+}

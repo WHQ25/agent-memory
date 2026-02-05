@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { formatOutput } from '../../src/format/index.js';
-import type { Memory, SearchResult, TagCount, SourceStats } from '../../src/source/interface.js';
+import { formatOutput } from '../../packages/cli/src/format/index.js';
+import type { Memory, SearchResult, TagCount, SourceStats } from '@agent-memory/core';
 
 const mockMemory: Memory = {
   id: 'test-id',

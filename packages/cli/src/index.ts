@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { registerMemoryCommands } from './commands/memory.js';
-import { registerSearchCommand } from './commands/search.js';
-import { registerListCommand } from './commands/list.js';
-import { registerTagsCommand } from './commands/tags.js';
-import { registerStatsCommand } from './commands/stats.js';
-import { registerRunCommand } from './commands/run.js';
-import { registerSourceCommand } from './commands/source.js';
-import { registerConfigCommand } from './commands/config.js';
-import { closeSource } from './middleware.js';
+import { registerMemoryCommands } from './cli/commands/memory.js';
+import { registerSearchCommand } from './cli/commands/search.js';
+import { registerListCommand } from './cli/commands/list.js';
+import { registerTagsCommand } from './cli/commands/tags.js';
+import { registerStatsCommand } from './cli/commands/stats.js';
+import { registerRunCommand } from './cli/commands/run.js';
+import { registerSourceCommand } from './cli/commands/source.js';
+import { registerConfigCommand } from './cli/commands/config.js';
+import { closeSource } from './cli/middleware.js';
 
 const program = new Command();
 

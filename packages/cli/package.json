@@ -1,0 +1,26 @@
+{
+  "name": "@agent-memory/cli",
+  "version": "0.1.0",
+  "description": "CLI for agent-memory: long-term, cross-project memory system for AI agents",
+  "type": "module",
+  "bin": {
+    "agmem": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@agent-memory/core": "workspace:*",
+    "commander": "^13.1.0",
+    "@toon-format/toon": "^2.1.0"
+  }
+}

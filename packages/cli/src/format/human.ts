@@ -1,4 +1,4 @@
-import type { Memory, SearchResult, TagCount, SourceStats } from '../source/interface.js';
+import type { Memory, SearchResult, TagCount, SourceStats } from '@agent-memory/core';
 
 function formatMemory(m: Memory): string {
   const lines = [

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { rrfFuse } from '../../src/search/rrf.js';
+import { rrfFuse } from '@agent-memory/core';
 
 describe('rrfFuse', () => {
   it('should fuse single ranking', () => {

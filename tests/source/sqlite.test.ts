@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { SqliteSource } from '../../src/source/sqlite/index.js';
-import type { Memory } from '../../src/source/interface.js';
+import { SqliteSource } from '@agent-memory/core';
+import type { Memory } from '@agent-memory/core';
 
 describe('SqliteSource', () => {
   let source: SqliteSource;

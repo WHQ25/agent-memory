@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import {
   getConfigValue, setConfigValue, deleteConfigValue, listConfig,
-} from '../../config/config.js';
+} from '@agent-memory/core';
 import { resolveFormat, output } from '../output.js';
 
 export function registerConfigCommand(program: Command): void {

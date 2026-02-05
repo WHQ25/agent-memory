@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 
-const CLI = join(import.meta.dirname, '../../dist/cli/index.js');
+const CLI = join(import.meta.dirname, '../../packages/cli/dist/index.js');
 
 describe('CLI E2E', () => {
   let tempDir: string;

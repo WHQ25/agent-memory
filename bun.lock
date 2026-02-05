@@ -2,16 +2,6 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "agmem",
-      "dependencies": {
-        "@huggingface/transformers": "^3.4.1",
-        "@toon-format/toon": "^2.1.0",
-        "better-sqlite3": "^11.8.1",
-        "commander": "^13.1.0",
-        "env-paths": "^3.0.0",
-        "sqlite-vec": "^0.1.7-alpha.2",
-        "uuid": "^11.1.0",
-      },
       "devDependencies": {
         "@types/better-sqlite3": "^7.6.13",
         "@types/uuid": "^10.0.0",
@@ -20,8 +10,35 @@
         "vitest": "^3.0.4",
       },
     },
+    "packages/cli": {
+      "name": "@agent-memory/cli",
+      "version": "0.1.0",
+      "bin": {
+        "agmem": "./dist/index.js",
+      },
+      "dependencies": {
+        "@agent-memory/core": "workspace:*",
+        "@toon-format/toon": "^2.1.0",
+        "commander": "^13.1.0",
+      },
+    },
+    "packages/core": {
+      "name": "@agent-memory/core",
+      "version": "0.1.0",
+      "dependencies": {
+        "@huggingface/transformers": "^3.4.1",
+        "better-sqlite3": "^11.8.1",
+        "env-paths": "^3.0.0",
+        "sqlite-vec": "^0.1.7-alpha.2",
+        "uuid": "^11.1.0",
+      },
+    },
   },
   "packages": {
+    "@agent-memory/cli": ["@agent-memory/cli@workspace:packages/cli"],
+
+    "@agent-memory/core": ["@agent-memory/core@workspace:packages/core"],
+
     "@ampproject/remapping": ["@ampproject/remapping@2.3.0", "", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.5", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw=="],
 
     "@babel/helper-string-parser": ["@babel/helper-string-parser@7.27.1", "", {}, "sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA=="],
