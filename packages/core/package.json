@@ -1,6 +1,6 @@
 {
   "name": "@agent-memory/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Core library for agent-memory: interfaces, sources, search, and embedding",
   "type": "module",
   "main": "./dist/index.js",
@@ -11,7 +11,7 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": ["dist", "README.md"],
   "publishConfig": {
     "access": "public"
   },
