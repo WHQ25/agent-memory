@@ -14,12 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
-
-      - uses: oven-sh/setup-bun@v2
 
       - run: bun install
 
@@ -28,7 +30,9 @@ jobs:
       - run: bun run test
 
       - name: Publish @agent-memory/core
-        run: npm publish --workspace packages/core --provenance --access public
+        working-directory: packages/core
+        run: npm publish --access public --provenance
 
       - name: Publish @agent-memory/cli
-        run: npm publish --workspace packages/cli --provenance --access public
+        working-directory: packages/cli
+        run: npm publish --access public --provenance
