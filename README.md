@@ -10,6 +10,8 @@ But agents forget everything else. The workaround you discovered last month, the
 
 ## Quick Start
 
+### CLI
+
 ```bash
 # Install globally
 npm install -g @agent-memory/cli
@@ -26,6 +28,35 @@ agmem search "ESM compatibility"
 # Get full content by ID
 agmem get <id>
 ```
+
+### MCP Server
+
+For AI agents that don't have shell access (e.g. Claude Desktop, Windsurf, Cline), use the MCP server:
+
+```bash
+npm install -g @agent-memory/mcp
+```
+
+Add to your MCP client config (e.g. `claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "agent-memory": {
+      "command": "agmem-mcp"
+    }
+  }
+}
+```
+
+The MCP server exposes 14 tools with the same capabilities as the CLI:
+
+| Group | Tools |
+|-------|-------|
+| Memory | `memory_add`, `memory_get`, `memory_update`, `memory_delete` |
+| Search | `memory_search`, `memory_list`, `memory_tags`, `memory_stats` |
+| Source | `source_list`, `source_run` |
+| Config | `config_set`, `config_get`, `config_list`, `config_delete` |
 
 ## Commands
 
@@ -114,7 +145,8 @@ Memories can live anywhere — a local SQLite database, a GitHub Gist, an S3 buc
 graph TB
   subgraph Interface["Interface Layer"]
     CLI["agmem CLI"]
-    Future["Future: MCP Server, AI SDK Tools, ..."]
+    MCP["agmem-mcp MCP Server"]
+    Future["Future: AI SDK Tools, ..."]
   end
 
   subgraph Core["Unified Memory Operations"]
@@ -137,6 +169,7 @@ graph TB
   end
 
   CLI --> Core
+  MCP --> Core
   Future -.-> Core
   Core --> Sources
   LS --> SQLite

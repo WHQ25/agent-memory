@@ -16,7 +16,7 @@ const program = new Command();
 program
   .name('agmem')
   .description('Long-term, cross-project memory system for AI agents')
-  .version('0.1.2')
+  .version('0.2.0')
   .option('--json', 'JSON output')
   .option('--human', 'Human-readable formatted output')
   .option('--source <name>', 'Target a specific source', 'local');

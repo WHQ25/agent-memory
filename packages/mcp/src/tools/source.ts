@@ -1,15 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { SqliteSource } from '@agent-memory/core';
 import { z } from 'zod';
-
-function success(data: unknown) {
-  return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
-}
-
-function error(e: unknown) {
-  const message = e instanceof Error ? e.message : String(e);
-  return { content: [{ type: 'text' as const, text: JSON.stringify({ error: message }) }], isError: true as const };
-}
+import { success, error } from '../utils.js';
 
 export function registerSourceTools(
   server: McpServer,
@@ -18,14 +10,21 @@ export function registerSourceTools(
   server.registerTool(
     'source_list',
     {
-      description: 'List configured memory sources.',
+      title: 'List Sources',
+      description: 'List configured memory sources. Currently only supports a single local SQLite source.',
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
     },
     async () => {
       try {
         const sources = [
           { name: 'local', type: 'sqlite', active: true },
         ];
-        return success(sources);
+        return success({ sources });
       } catch (e) {
         return error(e);
       }
@@ -35,9 +34,23 @@ export function registerSourceTools(
   server.registerTool(
     'source_run',
     {
-      description: 'Run a source management command (e.g. vacuum, reindex). Omit command to list available commands.',
+      title: 'Run Source Command',
+      description: [
+        'Run a source management command (e.g. embed, embed-rebuild). Omit command to list available commands.',
+        '',
+        'Args:',
+        '  command: Command name to run. Omit to list all available commands.',
+        '',
+        'Returns: { commands: [...] } when listing, or { result: ... } when running.',
+      ].join('\n'),
       inputSchema: {
-        command: z.string().optional().describe('Command to run. Omit to list available commands.'),
+        command: z.string().min(1).optional().describe('Command to run. Omit to list available commands.'),
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: false,
       },
     },
     async ({ command }) => {
@@ -46,16 +59,19 @@ export function registerSourceTools(
         const available = source.commands();
 
         if (!command) {
-          return success(available);
+          return success({ commands: available });
         }
 
         const valid = available.map((c) => c.name);
         if (!valid.includes(command)) {
-          return error(new Error(`Unknown command: ${command}. Available: ${valid.join(', ')}`));
+          return error(
+            new Error(`Unknown command: ${command}`),
+            `Available commands: ${valid.join(', ')}. Omit command to list all`,
+          );
         }
 
         const result = await source.run(command, { onProgress: () => {} });
-        return success(result);
+        return success({ result: result as Record<string, unknown> });
       } catch (e) {
         return error(e);
       }

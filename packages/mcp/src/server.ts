@@ -9,7 +9,7 @@ import { registerConfigTools } from './tools/config.js';
 export function createServer(injectedSource?: SqliteSource): McpServer {
   const server = new McpServer({
     name: 'agent-memory',
-    version: '0.1.2',
+    version: '0.2.0',
   });
 
   const getSource = async () => injectedSource ?? await resolveSource();

@@ -9,6 +9,7 @@ import { tmpdir } from 'node:os';
 interface ToolResult {
   content: Array<{ type: string; text: string }>;
   isError?: boolean;
+  structuredContent?: Record<string, unknown>;
 }
 
 async function callTool(client: Client, name: string, args: Record<string, unknown> = {}) {
@@ -89,9 +90,9 @@ describe('MCP Tools', () => {
 
       const { data } = await callTool(client, 'memory_get', { ids: added.id });
 
-      expect(data).toHaveLength(1);
-      expect(data[0].id).toBe(added.id);
-      expect(data[0].content).toBe('Get test content');
+      expect(data.memories).toHaveLength(1);
+      expect(data.memories[0].id).toBe(added.id);
+      expect(data.memories[0].content).toBe('Get test content');
     });
 
     it('should return full metadata with full=true', async () => {
@@ -105,23 +106,24 @@ describe('MCP Tools', () => {
         full: true,
       });
 
-      expect(data).toHaveLength(1);
-      expect(data[0].id).toBe(added.id);
-      expect(data[0].content).toBe('Full metadata test');
-      expect(data[0].tags).toEqual(['test']);
-      expect(data[0].createdAt).toBeDefined();
-      expect(data[0].updatedAt).toBeDefined();
-      expect(data[0].accessCount).toBeGreaterThanOrEqual(1);
-      expect(data[0].hash).toBeDefined();
+      expect(data.memories).toHaveLength(1);
+      expect(data.memories[0].id).toBe(added.id);
+      expect(data.memories[0].content).toBe('Full metadata test');
+      expect(data.memories[0].tags).toEqual(['test']);
+      expect(data.memories[0].createdAt).toBeDefined();
+      expect(data.memories[0].updatedAt).toBeDefined();
+      expect(data.memories[0].accessCount).toBeGreaterThanOrEqual(1);
+      expect(data.memories[0].hash).toBeDefined();
     });
 
-    it('should return error for non-existent id', async () => {
+    it('should return error with guidance for non-existent id', async () => {
       const result = await callTool(client, 'memory_get', {
         ids: 'non-existent-id',
       });
 
       expect(result.isError).toBe(true);
       expect(result.data.error).toContain('No memories found');
+      expect(result.data.error).toContain('memory_list');
     });
   });
 
@@ -158,7 +160,7 @@ describe('MCP Tools', () => {
       });
 
       const { data } = await callTool(client, 'memory_get', { ids: added.id });
-      expect(data[0].content).toBe('Updated content');
+      expect(data.memories[0].content).toBe('Updated content');
     });
   });
 
@@ -203,9 +205,9 @@ describe('MCP Tools', () => {
         query: 'ESM path resolution',
       });
 
-      expect(data.length).toBeGreaterThanOrEqual(1);
-      expect(data[0].score).toBeDefined();
-      expect(data[0].digest).toContain('ESM');
+      expect(data.results.length).toBeGreaterThanOrEqual(1);
+      expect(data.results[0].score).toBeDefined();
+      expect(data.results[0].digest).toContain('ESM');
     });
 
     it('should filter by tags', async () => {
@@ -223,8 +225,8 @@ describe('MCP Tools', () => {
         tags: 'node',
       });
 
-      expect(data.length).toBeGreaterThanOrEqual(1);
-      for (const result of data) {
+      expect(data.results.length).toBeGreaterThanOrEqual(1);
+      for (const result of data.results) {
         expect(result.tags).toContain('node');
       }
     });
@@ -242,8 +244,8 @@ describe('MCP Tools', () => {
     it('should list all memories as summaries without content', async () => {
       const { data } = await callTool(client, 'memory_list', {});
 
-      expect(data).toHaveLength(3);
-      for (const item of data) {
+      expect(data.items).toHaveLength(3);
+      for (const item of data.items) {
         expect(item.id).toBeDefined();
         expect(item.digest).toBeDefined();
         expect(item.tags).toBeDefined();
@@ -251,23 +253,38 @@ describe('MCP Tools', () => {
       }
     });
 
+    it('should include pagination metadata', async () => {
+      const { data } = await callTool(client, 'memory_list', {});
+
+      expect(data.offset).toBe(0);
+      expect(data.limit).toBe(10);
+      expect(data.hasMore).toBe(false);
+    });
+
+    it('should set hasMore when result count equals limit', async () => {
+      const { data } = await callTool(client, 'memory_list', { limit: 2 });
+
+      expect(data.items).toHaveLength(2);
+      expect(data.hasMore).toBe(true);
+    });
+
     it('should filter by tag', async () => {
       const { data } = await callTool(client, 'memory_list', { tags: 'shared' });
-      expect(data).toHaveLength(2);
+      expect(data.items).toHaveLength(2);
     });
 
     it('should respect limit', async () => {
       const { data } = await callTool(client, 'memory_list', { limit: 2 });
-      expect(data).toHaveLength(2);
+      expect(data.items).toHaveLength(2);
     });
 
     it('should sort by access count', async () => {
       const { data: all } = await callTool(client, 'memory_list', {});
       // Bump access count for first memory
-      await callTool(client, 'memory_get', { ids: all[0].id });
+      await callTool(client, 'memory_get', { ids: all.items[0].id });
 
       const { data } = await callTool(client, 'memory_list', { sort: 'access' });
-      expect(data[0].accessCount).toBeGreaterThanOrEqual(1);
+      expect(data.items[0].accessCount).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -280,11 +297,11 @@ describe('MCP Tools', () => {
 
       const { data } = await callTool(client, 'memory_tags');
 
-      const nodeTag = data.find((t: { tag: string }) => t.tag === 'node');
+      const nodeTag = data.tags.find((t: { tag: string }) => t.tag === 'node');
       expect(nodeTag).toBeDefined();
       expect(nodeTag.count).toBe(2);
 
-      const esmTag = data.find((t: { tag: string }) => t.tag === 'esm');
+      const esmTag = data.tags.find((t: { tag: string }) => t.tag === 'esm');
       expect(esmTag).toBeDefined();
       expect(esmTag.count).toBe(1);
     });
@@ -310,7 +327,7 @@ describe('MCP Tools', () => {
     it('should return local sqlite source', async () => {
       const { data } = await callTool(client, 'source_list');
 
-      expect(data).toEqual([
+      expect(data.sources).toEqual([
         { name: 'local', type: 'sqlite', active: true },
       ]);
     });
@@ -322,24 +339,25 @@ describe('MCP Tools', () => {
     it('should list available commands when no command given', async () => {
       const { data } = await callTool(client, 'source_run', {});
 
-      expect(Array.isArray(data)).toBe(true);
-      expect(data.length).toBeGreaterThan(0);
-      const names = data.map((c: { name: string }) => c.name);
+      expect(Array.isArray(data.commands)).toBe(true);
+      expect(data.commands.length).toBeGreaterThan(0);
+      const names = data.commands.map((c: { name: string }) => c.name);
       expect(names).toContain('init');
     });
 
     it('should run embed-status command', async () => {
       const { data } = await callTool(client, 'source_run', { command: 'embed-status' });
 
-      expect(data.total).toBeGreaterThanOrEqual(0);
-      expect(data.indexed).toBeGreaterThanOrEqual(0);
+      expect(data.result.total).toBeGreaterThanOrEqual(0);
+      expect(data.result.indexed).toBeGreaterThanOrEqual(0);
     });
 
-    it('should return error for unknown command', async () => {
+    it('should return error with guidance for unknown command', async () => {
       const result = await callTool(client, 'source_run', { command: 'nonexistent' });
 
       expect(result.isError).toBe(true);
       expect(result.data.error).toContain('Unknown command');
+      expect(result.data.error).toContain('Available commands');
     });
   });
 
@@ -353,7 +371,8 @@ describe('MCP Tools', () => {
       });
 
       const { data } = await callTool(client, 'config_get', { key: 'test.key' });
-      expect(data['test.key']).toBe('test-value');
+      expect(data.key).toBe('test.key');
+      expect(data.value).toBe('test-value');
     });
 
     it('should list config values', async () => {
@@ -362,8 +381,8 @@ describe('MCP Tools', () => {
 
       const { data } = await callTool(client, 'config_list', {});
 
-      expect(data['a.key']).toBe('val1');
-      expect(data['b.key']).toBe('val2');
+      expect(data.entries['a.key']).toBe('val1');
+      expect(data.entries['b.key']).toBe('val2');
     });
 
     it('should delete a config value and verify it is gone', async () => {
@@ -379,11 +398,12 @@ describe('MCP Tools', () => {
       expect(getResult.data.error).toContain('not found');
     });
 
-    it('should return error for non-existent config key', async () => {
+    it('should return error with guidance for non-existent config key', async () => {
       const result = await callTool(client, 'config_get', { key: 'does.not.exist' });
 
       expect(result.isError).toBe(true);
       expect(result.data.error).toContain('not found');
+      expect(result.data.error).toContain('config_list');
     });
   });
 });
