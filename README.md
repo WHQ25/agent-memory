@@ -43,7 +43,8 @@ Add to your MCP client config (e.g. `claude_desktop_config.json`):
 {
   "mcpServers": {
     "agent-memory": {
-      "command": "agmem-mcp"
+      "command": "npx",
+      "args": ["-y", "@agent-memory/mcp"]
     }
   }
 }

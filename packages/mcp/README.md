@@ -20,7 +20,8 @@ Add to your MCP client config:
 {
   "mcpServers": {
     "agent-memory": {
-      "command": "agmem-mcp"
+      "command": "npx",
+      "args": ["-y", "@agent-memory/mcp"]
     }
   }
 }
@@ -32,7 +33,8 @@ Add to your MCP client config:
 {
   "mcpServers": {
     "agent-memory": {
-      "command": "agmem-mcp"
+      "command": "npx",
+      "args": ["-y", "@agent-memory/mcp"]
     }
   }
 }
@@ -44,7 +46,8 @@ Add to your MCP client config:
 {
   "mcpServers": {
     "agent-memory": {
-      "command": "agmem-mcp"
+      "command": "npx",
+      "args": ["-y", "@agent-memory/mcp"]
     }
   }
 }
